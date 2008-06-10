@@ -68,6 +68,33 @@ Hack.app :threaded => false do
   end
 end
 
-# Sessions... this is important, but dunno yet.
-# Including custom modules to the request/response servlet cycle...
-# Nesting uri's
+# TODO: Working with sessions. They'll be cookie based, stolen form Rails :)
+
+# Including custom modules for the 'actions' to use:
+
+module OurTemplateEngine
+  def render_template(template)
+    "You rendered #{template}!"
+  end
+end
+
+Hack.app do
+  include OurTemplateEngine  
+  uri '/' do
+    render_template 'home' # returns "You rendered home!"
+  end
+end
+
+# Using regex capture groups in uri definitions, as paramaters, this rules:
+
+Hack.app do
+  uri '/user/(\w+)' do |username|
+    "Welcome to #{username}'s page."
+  end
+  uri '/user/(\w+)/edit' do |username|
+    "Trying to edit #{username}'s profile, eh?"
+  end
+end
+
+# TODO: Nesting uri's, is this even a good idea?
+# TODO: Filters, somehow...
