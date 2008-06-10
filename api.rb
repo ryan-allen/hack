@@ -1,3 +1,7 @@
+#
+# The Hack API, by Ryan Allen
+#
+
 # Basic GET using #uri:
 
 Hack.app do
@@ -69,6 +73,8 @@ Hack.app :threaded => false do
 end
 
 # TODO: Working with sessions. They'll be cookie based, stolen form Rails :)
+#  - auto-generates a secret to ./.hack-secret, uses that, rather than having
+#    to specify your own.
 
 # Including custom modules for the 'actions' to use:
 
@@ -98,3 +104,7 @@ end
 
 # TODO: Nesting uri's, is this even a good idea?
 # TODO: Filters, somehow...
+# TODO: Getting params
+# TODO: Nice exception handling
+# TODO: access.log, error.log
+# TODO: accessing request/response/session/params, via an OpenStruct
