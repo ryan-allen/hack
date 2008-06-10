@@ -72,10 +72,6 @@ Hack.app :threaded => false do
   end
 end
 
-# TODO: Working with sessions. They'll be cookie based, stolen form Rails :)
-#  - auto-generates a secret to ./.hack-secret, uses that, rather than having
-#    to specify your own.
-
 # Including custom modules for the 'actions' to use:
 
 module OurTemplateEngine
@@ -102,9 +98,15 @@ Hack.app do
   end
 end
 
-# TODO: Nesting uri's, is this even a good idea?
-# TODO: Filters, somehow...
-# TODO: Getting params
+#
+# These TODOs are listed by priority:
+#
+
+# TODO: Working with sessions. They'll be cookie based, stolen form Rails :)
+#  - auto-generates a secret to ./.hack-secret, uses that, rather than having
+#    to specify your own.
+# TODO: accessing request/response/session/params, via an OpenStruct
 # TODO: Nice exception handling
 # TODO: access.log, error.log
-# TODO: accessing request/response/session/params, via an OpenStruct
+# TODO: Filters, somehow...
+# TODO: Nesting uri's, is this even a good idea?
