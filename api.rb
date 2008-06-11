@@ -5,10 +5,10 @@
 # Basic GET using #uri:
 
 Hack.app do
-  uri '/' do
+  uri (or map or get? maybe get...) '/' do
     'Hello World'
   end
-end.run! :port => 4000
+end
 
 # GET/POST/PUT/DELETE:
 
@@ -37,7 +37,7 @@ end
 
 # Alternative syntax:
 
-Hack.app(:port => 4000) { url('/') { 'Hello World!' } }
+Hack.run!(:port => 4000) { url('/') { 'Hello World!' } }
 
 # Serving a path (+ performance awesome for Apache/Lighttpd/Nginx):
 
@@ -90,7 +90,7 @@ end
 # Using regex capture groups in uri definitions, as paramaters, this rules:
 
 Hack.app do
-  uri '/user/(\w+)' do |username|
+  uri '/user/(\w+)', :as => :users_hompeage do |username|
     "Welcome to #{username}'s page."
   end
   uri '/user/(\w+)/edit' do |username|
