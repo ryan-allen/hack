@@ -12,10 +12,17 @@ private
     match = raw_status.match(/HTTP\/\d\.\d (\d+)/)
     status = match.captures[0].to_i
     boundary = lines.index('')
-    raw_headers, body = lines[0...boundary], lines[boundary+1..lines.length].join("\n")
+    if boundary.nil? # must be content length zero?
+      raw_headers, body = lines[0...lines.length], nil # need a test for this
+    else
+      raw_headers, body = lines[0...boundary], lines[boundary+1..lines.length].join("\n")
+    end
     headers = {}
     raw_headers.each do |raw_header|
       headers[raw_header[0...raw_header.index(':')]] = raw_header[raw_header.index(':')+2..raw_header.length]
+    end
+    if body.nil? and headers['Content-Length'] != '0'
+      raise "body was nil and content length was not zero: #{headers.inspect}"
     end
     [status, headers, body]
   rescue

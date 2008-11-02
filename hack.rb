@@ -1,4 +1,5 @@
 %w(rubygems rack).each { |dep| require dep } 
+require "#{File.dirname(__FILE__)}/3rd-party/eigenclass_instance_exec"
 
 module Hack
 
@@ -40,7 +41,7 @@ private
     end
 
     def process!
-      return_value = @code.call(*@captures)
+      return_value = instance_exec(*@captures, &@code)
       if return_value.is_a?(Array)
         return_value
       elsif return_value.is_a?(String)
@@ -52,8 +53,8 @@ private
 
   private
 
-    def redirect(location, status = :temporary)
-      [301, {'Location' => location}, '']  
+    def redirect(location, status = :temporarily)
+      [(status == :temporarily ? 302 : 301), {'Location' => location}, '']  
     end
 
   end

@@ -24,6 +24,8 @@ describe Hack do
       get('/show/(\d+)') { |id| "Looking at #{id}" }
       get('/show/(\d+)/edit') { |id| "You are editing #{id}" }
       get('/default-redirect') { redirect '/' }
+      get('/explicit-temporary-redirect') { redirect '/sweet', :temporarily }
+      get('/explicit-permanent-redirect') { redirect '/err', :permanently }
     end
   end
   
@@ -60,12 +62,22 @@ describe Hack do
 
   it 'redirects temporarily by deafult' do
     get '/default-redirect'
-    @status.should == 301
+    @status.should == 302
     @headers['Location'].should == '/'
   end
 
-  it 'can redirect temporarily when specified'
-  it 'can redirect permanently when specified'
+  it 'can redirect temporarily when specified' do
+    get '/explicit-temporary-redirect'
+    @status.should == 302
+    @headers['Location'].should == '/sweet'
+  end
+
+  it 'can redirect permanently when specified' do
+    get '/explicit-permanent-redirect'
+    @status.should == 301
+    @headers['Location'].should == '/err'
+  end
+
   it 'can render blank statuses w/ ints, in this case 404'
   it 'can render a blank 500'
   it 'can get out GET params'
