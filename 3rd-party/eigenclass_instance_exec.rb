@@ -6,7 +6,7 @@ class Object
     begin
       old_critical, Thread.critical = Thread.critical, true
       n = 0
-      n += 1 while respond_to?(mname=__instance_exec#{n})
+      n += 1 while respond_to?(mname="__instance_exec#{n}")
       InstanceExecHelper.module_eval{ define_method(mname, &block) }
     ensure
       Thread.critical = old_critical
