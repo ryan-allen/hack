@@ -96,6 +96,8 @@ describe Hack do
     @body.should == nil
   end
 
+  it 'can use that alternate "str", 404 for rendering w/ status too!'
+
   it 'can get out GET params' do
     get '/test-get?a=1&b=2&c=3'
     @status.should == 200
@@ -103,9 +105,26 @@ describe Hack do
   end
 
   it 'can get out POST params'
-
-  it 'can serve w/ a dirhandler'
+  it 'checks that redirect gets exactly either :permanently or :temporarily'
+  it 'can serve files w/ the dirhandler'
   it 'can serve files w/ x-send-file'
   it 'can serve files w/ x-acell-redirect'
+  it 'can serve via alias like: serve "images", :as => "i"'
+  it 'has sessions & session data (steal rails cookie sessions)'
+  it 'does that whole secret generation to .hack-secret'
+  it 'has an access log'
+  it 'has an error log'
+  it 'supports post, put, delete'
+  it 'has uri which does get/post/put/delete, and has get?/post? introspection methods, etc'
+  it 'has filters, somehow, not sure how this will work'
+  it 'hijacks include and includes it in whatever the app context is (Cycle)?'
+  it 'can use that alternate Hack.app(...).run!(...) syntax from the README'
+  it 'can be threaded or not threaded'
+  it 'can specify what handler (thin/mongrel/fcgi) you want it to use'
+  it 'has nice exception error pages (and a toggle for it on or off), steal merbs'
+  it 'can mess with headers like content-type and etc'
+  it 'can reload itself in a certain mode for code and fix (i.e. rails) style development'
+  it 'has a set of rspec matchers or something so people can test hack apps very easily'
+  it 'perhaps can work with rspec stories if i ever can be bothered looking into them (but this would be ace for integration style UATs or summat'
 
 end
