@@ -33,4 +33,12 @@ private
 
   end
 
+  class Cycle # as in, a request/response cycle
+    
+    def initialize(env, &code)
+      # lots of interesting things here
+    end
+
+  end
+
 end

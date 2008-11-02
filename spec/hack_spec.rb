@@ -16,10 +16,11 @@ describe Hack do
   
   before do  
     start_app! do
-      get('/')                {      'I am HOMEPAGE!'        }
-      get('/about')           {      'I am ABOUT!'           }
-      get('/show/(\d+)')      { |id| "Looking at #{id}"      }
+      get('/') { 'I am HOMEPAGE!' }
+      get('/about') { 'I am ABOUT!' }
+      get('/show/(\d+)') { |id| "Looking at #{id}" }
       get('/show/(\d+)/edit') { |id| "You are editing #{id}" }
+      get('/default-redirect') { redirect '/' }
     end
   end
   
@@ -29,6 +30,8 @@ describe Hack do
   
   def get(uri)
     sleep 1 # for some reason, it takes a tiny bit to start responding to curl?
+    @status = 200
+    @headers = {}
     @body = `curl http://0.0.0.0:5555#{uri} 2>/dev/null`.chomp
   end
 
@@ -54,7 +57,12 @@ describe Hack do
 
   it 'raises exception when we try to get a path that it cannot match'
 
-  it 'redirects temporarily by deafult'
+  it 'redirects temporarily by deafult' do
+    get '/a-default-redirect'
+    @status.should == 301
+    @headers['Location'].should == '/'
+  end
+
   it 'can redirect temporarily when specified'
   it 'can redirect permanently when specified'
   it 'can render blank statuses w/ ints, in this case 404'
