@@ -18,11 +18,11 @@ private
     def call(env)
       # return [200, {}, env.inspect] # good for env debugging :)
       @urls.each do |pattern, code|
-        if env['PATH_INFO'] =~ pattern 
-          return [200, {}, code.call]
+        if match = pattern.match(env['PATH_INFO'])
+          return [200, {}, code.call(*match.captures)]
         end
       end
-      raise "can't find shit for #{env['PATH_INFO'].inspect}" # not sure how to test this with fork
+      raise "can't find shit for #{env['PATH_INFO'].inspect}" # not sure how to test this with fork (yet)
     end
 
   private
