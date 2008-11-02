@@ -19,7 +19,7 @@ private
       # return [200, {}, env.inspect] # good for env debugging :)
       @urls.each do |pattern, code|
         if match = pattern.match(env['PATH_INFO'])
-          return [200, {}, code.call(*match.captures)]
+          return Cycle.new(match.captures, Rack::Request.new(env), env, &code).process!
         end
       end
       raise "can't find shit for #{env['PATH_INFO'].inspect}" # not sure how to test this with fork (yet)
@@ -35,8 +35,25 @@ private
 
   class Cycle # as in, a request/response cycle
     
-    def initialize(env, &code)
-      # lots of interesting things here
+    def initialize(captures, request, env, &code)
+      @captures, @request, @env, @code = captures, request, env, code
+    end
+
+    def process!
+      return_value = @code.call(*@captures)
+      if return_value.is_a?(Array)
+        return_value
+      elsif return_value.is_a?(String)
+        [200, {}, return_value]
+      else
+        raise "unknown return value in process!: #{return_value.inspect}"
+      end
+    end
+
+  private
+
+    def redirect(location, status = :temporary)
+      [301, {'Location' => location}, '']  
     end
 
   end

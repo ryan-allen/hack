@@ -59,9 +59,9 @@ describe Hack do
   it 'raises exception when we try to get a path that it cannot match'
 
   it 'redirects temporarily by deafult' do
-    #get '/a-default-redirect'
-    #@status.should == 301
-    #@headers['Location'].should == '/'
+    get '/default-redirect'
+    @status.should == 301
+    @headers['Location'].should == '/'
   end
 
   it 'can redirect temporarily when specified'
