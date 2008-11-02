@@ -1,4 +1,5 @@
 %w(rubygems rack).each { |dep| require dep } 
+
 module Hack
 
   def self.run!(opts = {}, &app)
@@ -15,18 +16,19 @@ private
     end
 
     def call(env)
-      # [200, {}, env.inspect] # good for env debugging :)
+      # return [200, {}, env.inspect] # good for env debugging :)
       @urls.each do |pattern, code|
         if env['PATH_INFO'] =~ pattern 
           return [200, {}, code.call]
         end
       end
+      raise "can't find shit for #{env['PATH_INFO'].inspect}" # not sure how to test this with fork
     end
 
   private
 
     def get(url, &code)
-      @urls[/#{url}/] = code
+      @urls[/^#{url}$/] = code
     end
 
   end

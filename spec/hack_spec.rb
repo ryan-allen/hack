@@ -17,8 +17,9 @@ describe Hack do
   
   before do  
     start_app! do
-      get('/')      { 'I am HOMEPAGE!' }
-      get('/about') { 'I am ABOUT!' }
+      get('/')            { 'I am HOMEPAGE!' }
+      get('/about')       { 'I am ABOUT!' }
+      get('/show/(\d+)') { |id| "Looking at #{id}" }
     end
   end
   
@@ -32,12 +33,19 @@ describe Hack do
 
   it 'can map GET: /' do
     get '/'
-    @body.should == "I am HOMEPAGE!"
+    @body.should == 'I am HOMEPAGE!'
   end
   
   it 'can map GET: /about' do
     get '/about'
-    @body.should == "I am ABOUT!"
+    @body.should == 'I am ABOUT!'
   end
+
+  it 'can capture a single param from a url' do
+    get '/show/42'
+    @body.should == 'Looking at 42'
+  end
+
+  it 'raises exception when we try to get a path that it cannot match'
 
 end
