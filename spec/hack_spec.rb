@@ -28,6 +28,7 @@ describe Hack do
       get('/explicit-permanent-redirect') { redirect '/err', :permanently }
       get('/four-oh-four') { 404 }
       get('/five-hungee') { 500 }
+      get('/test-get') { "a was #{get['a']} and b was #{get['b']} and c was #{get['c']}" }
     end
   end
   
@@ -95,8 +96,14 @@ describe Hack do
     @body.should == nil
   end
 
-  it 'can get out GET params'
+  it 'can get out GET params' do
+    get '/test-get?a=1&b=2&c=3'
+    @status.should == 200
+    @body.should == "a was 1 and b was 2 and c was 3"
+  end
+
   it 'can get out POST params'
+
   it 'can serve w/ a dirhandler'
   it 'can serve files w/ x-send-file'
   it 'can serve files w/ x-acell-redirect'

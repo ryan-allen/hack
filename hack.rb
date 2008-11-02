@@ -59,6 +59,10 @@ private
       [(status == :temporarily ? 302 : 301), {'Location' => location}, '']  
     end
 
+    def get
+      @request.GET
+    end
+
   end
 
 end
