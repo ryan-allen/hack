@@ -7,12 +7,11 @@ module CurlHelper
 private
 
   def parse(output)
-    lines = output.split(/\r\n|\n/)
+    lines = output.split(/\r\n/)
     raw_status = lines.shift
     match = raw_status.match(/HTTP\/\d\.\d (\d+)/)
     status = match.captures[0].to_i
     boundary = lines.index('')
-    raise lines.inspect if boundary.nil?
     raw_headers, body = lines[0...boundary], lines[boundary+1..lines.length].join("\n")
     headers = {}
     raw_headers.each do |raw_header|
@@ -43,6 +42,7 @@ Content-Length: 26
 
 Ya mum's a web framework!
       server_output
+      @output.gsub!("\n", "\r\n")
       @status, @headers, @body = parse(@output)
     end
 
