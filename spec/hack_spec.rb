@@ -7,7 +7,7 @@ describe Hack do
       require 'hack'
       Hack.run!(opts, &app)
     end
-    sleep 0.5 # for some reason, it takes a tiny bit to start responding to curl?
+    sleep 1# for some reason, it takes a tiny bit to start responding to curl?
   end
   
   def stop_app!
@@ -17,7 +17,8 @@ describe Hack do
   
   before do  
     start_app! do
-      get('/') { 'Hello World!' }
+      get('/')      { 'I am HOMEPAGE!' }
+      get('/about') { 'I am ABOUT!' }
     end
   end
   
@@ -26,12 +27,17 @@ describe Hack do
   end
   
   def get(uri)
-    @body = `curl http://0.0.0.0:4000/ 2>/dev/null`
+    @body = `curl http://0.0.0.0:5555/ 2>/dev/null`.chomp
   end
 
   it 'can map GET: /' do
     get '/'
-    @body.should =~ /Hello World!/
+    @body.should == "I am HOMEPAGE!"
   end
   
+  it 'can map GET: /about' do
+    get '/about'
+    @body.should == "I am ABOUT!"
+  end
+
 end
