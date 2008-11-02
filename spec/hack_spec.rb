@@ -7,7 +7,6 @@ describe Hack do
       require 'hack'
       Hack.run!(opts, &app)
     end
-    sleep 1 # for some reason, it takes a tiny bit to start responding to curl?
   end
   
   def stop_app!
@@ -29,6 +28,7 @@ describe Hack do
   end
   
   def get(uri)
+    sleep 1 # for some reason, it takes a tiny bit to start responding to curl?
     @body = `curl http://0.0.0.0:5555#{uri} 2>/dev/null`.chomp
   end
 
@@ -53,5 +53,16 @@ describe Hack do
   end
 
   it 'raises exception when we try to get a path that it cannot match'
+
+  it 'redirects temporarily by deafult'
+  it 'can redirect temporarily when specified'
+  it 'can redirect permanently when specified'
+  it 'can render blank statuses w/ ints, in this case 404'
+  it 'can render a blank 500'
+  it 'can get out GET params'
+  it 'can get out POST params'
+  it 'can serve w/ a dirhandler'
+  it 'can serve files w/ x-send-file'
+  it 'can serve files w/ x-acell-redirect'
 
 end
