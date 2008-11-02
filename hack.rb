@@ -46,6 +46,8 @@ private
         return_value
       elsif return_value.is_a?(String)
         [200, {}, return_value]
+      elsif return_value.is_a?(Fixnum)
+        [return_value, {}, '']
       else
         raise "unknown return value in process!: #{return_value.inspect}"
       end

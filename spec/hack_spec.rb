@@ -26,6 +26,8 @@ describe Hack do
       get('/default-redirect') { redirect '/' }
       get('/explicit-temporary-redirect') { redirect '/sweet', :temporarily }
       get('/explicit-permanent-redirect') { redirect '/err', :permanently }
+      get('/four-oh-four') { 404 }
+      get('/five-hungee') { 500 }
     end
   end
   
@@ -64,22 +66,35 @@ describe Hack do
     get '/default-redirect'
     @status.should == 302
     @headers['Location'].should == '/'
+    @body.should == nil
   end
 
   it 'can redirect temporarily when specified' do
     get '/explicit-temporary-redirect'
     @status.should == 302
     @headers['Location'].should == '/sweet'
+    @body.should == nil
   end
 
   it 'can redirect permanently when specified' do
     get '/explicit-permanent-redirect'
     @status.should == 301
     @headers['Location'].should == '/err'
+    @body.should == nil
   end
 
-  it 'can render blank statuses w/ ints, in this case 404'
-  it 'can render a blank 500'
+  it 'can render blank statuses w/ ints, in this case 404' do
+    get '/four-oh-four'
+    @status.should == 404
+    @body.should == nil
+  end
+  
+  it 'can render a blank 500' do
+    get '/five-hungee'
+    @status.should == 500
+    @body.should == nil
+  end
+
   it 'can get out GET params'
   it 'can get out POST params'
   it 'can serve w/ a dirhandler'
