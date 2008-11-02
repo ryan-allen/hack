@@ -17,9 +17,10 @@ describe Hack do
   
   before do  
     start_app! do
-      get('/')            { 'I am HOMEPAGE!' }
-      get('/about')       { 'I am ABOUT!' }
-      get('/show/(\d+)') { |id| "Looking at #{id}" }
+      get('/')                {      'I am HOMEPAGE!'        }
+      get('/about')           {      'I am ABOUT!'           }
+      get('/show/(\d+)')      { |id| "Looking at #{id}"      }
+      get('/show/(\d+)/edit') { |id| "You are editing #{id}" }
     end
   end
   
@@ -44,6 +45,11 @@ describe Hack do
   it 'can capture a single param from a url' do
     get '/show/42'
     @body.should == 'Looking at 42'
+  end
+
+  it 'matches similar (extended?) paths correctly' do
+    get '/show/42/edit'
+    @body.should == "You are editing 42"
   end
 
   it 'raises exception when we try to get a path that it cannot match'
