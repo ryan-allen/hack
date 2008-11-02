@@ -33,7 +33,7 @@ describe Hack do
   
   def get(uri)
     sleep 1 # for some reason, it takes a tiny bit to start listening on 5555? 
-    @status, @headers, @body = curl(uri)
+    @status, @headers, @body = curl("http://localhost:5555#{uri}")
   end
 
   it 'can map GET: /' do

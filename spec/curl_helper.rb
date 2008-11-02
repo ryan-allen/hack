@@ -1,7 +1,7 @@
 module CurlHelper
   
   def curl(uri)
-    parse `curl -i http://0.0.0.0:5555#{uri} 2>/dev/null`.chomp
+    parse `curl -i #{uri} 2>/dev/null`.chomp
   end
 
 private
@@ -20,7 +20,7 @@ private
     end
     [status, headers, body]
   rescue
-    puts output
+    puts output # look at what my sucky parser can't parse
     raise $!
   end
 
