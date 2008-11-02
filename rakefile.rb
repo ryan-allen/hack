@@ -1,5 +1,5 @@
 task :default => :spec
 
 task :spec do
-  puts `spec --color hack_spec.rb`
+  puts `spec --color spec/hack_spec.rb`
 end
