@@ -29,6 +29,10 @@ describe Hack do
       get('/four-oh-four') { 404 }
       get('/five-hungee') { 500 }
       get('/test-get') { "a was #{get['a']} and b was #{get['b']} and c was #{get['c']}" }
+      # this catch all is here to test deterministic order of matching
+      # if its' not deterministic it tends to catch a bunch of other
+      # random ones, so we put catch all's last :)
+      get('/(.*)') { |junk| 'i am the catch-all and i caught ' + junk }
     end
   end
   
@@ -104,6 +108,12 @@ describe Hack do
     @body.should == "a was 1 and b was 2 and c was 3"
   end
 
+  it 'can get to the catch-all' do
+    get '/hehe-some-random-url'
+    @status.should == 200
+    @body.should == 'i am the catch-all and i caught hehe-some-random-url'
+  end
+
   it 'can get out POST params'
   it 'checks that redirect gets exactly either :permanently or :temporarily'
   it 'can serve files w/ the dirhandler'
@@ -125,6 +135,6 @@ describe Hack do
   it 'can mess with headers like content-type and etc'
   it 'can reload itself in a certain mode for code and fix (i.e. rails) style development'
   it 'has a set of rspec matchers or something so people can test hack apps very easily'
-  it 'perhaps can work with rspec stories if i ever can be bothered looking into them (but this would be ace for integration style UATs or summat'
+  it 'perhaps can work with rspec stories if i ever can be bothered looking into them (but this would be ace for integration style UATs or summat (and by that i mean, for people making hack apps)'
 
 end

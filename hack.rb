@@ -12,15 +12,16 @@ private
   class App
 
     def initialize(&app)
-      @urls = {} 
+      @urls_to_proc = {} 
+      @urls_in_order = []
       instance_eval(&app)
     end
 
     def call(env)
       # return [200, {}, env.inspect] # good for env debugging :)
-      @urls.each do |pattern, code|
-        if match = pattern.match(env['PATH_INFO'])
-          return Cycle.new(match.captures, Rack::Request.new(env), env, &code).process!
+      @urls_in_order.each do |url|
+        if match = url.match(env['PATH_INFO'])
+          return Cycle.new(match.captures, Rack::Request.new(env), env, &@urls_to_proc[url]).process!
         end
       end
       raise "can't find shit for #{env['PATH_INFO'].inspect}" # not sure how to test this with fork (yet)
@@ -29,7 +30,8 @@ private
   private
 
     def get(url, &code)
-      @urls[/^#{url}$/] = code
+      @urls_in_order << /^#{url}$/
+      @urls_to_proc[/^#{url}$/] = code
     end
 
   end
