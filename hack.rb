@@ -12,16 +12,15 @@ private
   class App
 
     def initialize(&app)
-      @urls_to_proc = {} 
-      @urls_in_order = []
+      @urls_in_order = {'GET' => [], 'POST' => []}
+      @urls_to_proc  = {'GET' => {}, 'POST' => {}}
       instance_eval(&app)
     end
 
     def call(env)
-      # return [200, {}, env.inspect] # good for env debugging :)
-      @urls_in_order.each do |url|
+      @urls_in_order[env['REQUEST_METHOD']].each do |url|
         if match = url.match(env['PATH_INFO'])
-          return Cycle.new(match.captures, Rack::Request.new(env), env, &@urls_to_proc[url]).process!
+          return Cycle.new(match.captures, Rack::Request.new(env), env, &@urls_to_proc[env['REQUEST_METHOD']][url]).process!
         end
       end
       raise "can't find shit for #{env['PATH_INFO'].inspect}" # not sure how to test this with fork (yet)
@@ -30,13 +29,20 @@ private
   private
 
     def get(url, &code)
-      @urls_in_order << /^#{url}$/
-      @urls_to_proc[/^#{url}$/] = code
+      @urls_in_order['GET'] << /^#{url}$/
+      @urls_to_proc['GET'][/^#{url}$/] = code
+    end
+
+    def post(url, &code)
+      @urls_in_order['POST'] << /^#{url}$/
+      @urls_to_proc['POST'][/^#{url}$/] = code
     end
 
   end
 
   class Cycle # as in, a request/response cycle
+
+    attr_reader :env
     
     def initialize(captures, request, env, &code)
       @captures, @request, @env, @code = captures, request, env, code
@@ -61,8 +67,16 @@ private
       [(status == :temporarily ? 302 : 301), {'Location' => location}, '']  
     end
 
-    def get
-      @request.GET
+    %w(GET POST).each do |request_method|
+      
+      define_method request_method.downcase do
+        @request.send(request_method)
+      end
+
+      #define_method request_method.downcase+"?" do
+      #  env['REQUEST_METHOD'] == request_method
+      #end
+
     end
 
   end

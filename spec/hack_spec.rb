@@ -29,6 +29,9 @@ describe Hack do
       get('/four-oh-four') { 404 }
       get('/five-hungee') { 500 }
       get('/test-get') { "a was #{get['a']} and b was #{get['b']} and c was #{get['c']}" }
+      get('/inspect-env') { env.inspect }
+      get('/err') { 'err, get' }
+      post('/err') { 'err, post' } 
       # this catch all is here to test deterministic order of matching
       # if its' not deterministic it tends to catch a bunch of other
       # random ones, so we put catch all's last :)
@@ -42,7 +45,12 @@ describe Hack do
   
   def get(uri)
     sleep 1 # for some reason, it takes a tiny bit to start listening on 5555? 
-    @status, @headers, @body = curl("http://localhost:5555#{uri}")
+    @status, @headers, @body = curl("http://localhost:5555#{uri}", 'GET') 
+  end
+
+  def post(uri)
+    sleep 1 # for some reason, it takes a tiny bit to start listening on 5555? 
+    @status, @headers, @body = curl("http://localhost:5555#{uri}", 'POST')
   end
 
   it 'can map GET: /' do
@@ -64,8 +72,6 @@ describe Hack do
     get '/show/42/edit'
     @body.should == "You are editing 42"
   end
-
-  it 'raises exception when we try to get a path that it cannot match'
 
   it 'redirects temporarily by deafult' do
     get '/default-redirect'
@@ -114,7 +120,30 @@ describe Hack do
     @body.should == 'i am the catch-all and i caught hehe-some-random-url'
   end
 
+  it 'has access to env via env' do
+    get '/inspect-env'
+    @body[0].chr.should == '{'
+    @body[-1].chr.should == '}'
+  end
+
+  it 'should be able to get err when there is a post err' do
+    get '/err'
+    @body.should == 'err, get'
+  end
+
+  it 'should be able to post to err, when there is a get err' do
+    post '/err'
+    @body.should == 'err, post'
+  end
+
+  it 'get? and post? respond correctly w/ get method' 
+  it 'get? and post? respond correctly w/ post method' 
+  it 'can specify a uri w/ uri that will respond to get and post'
   it 'can get out POST params'
+
+  # complete up to here and we got enough for the blog
+
+  it 'can get both POST and GET params in a post method (coz get is really a query string)'
   it 'checks that redirect gets exactly either :permanently or :temporarily'
   it 'can serve files w/ the dirhandler'
   it 'can serve files w/ x-send-file'
@@ -136,5 +165,6 @@ describe Hack do
   it 'can reload itself in a certain mode for code and fix (i.e. rails) style development'
   it 'has a set of rspec matchers or something so people can test hack apps very easily'
   it 'perhaps can work with rspec stories if i ever can be bothered looking into them (but this would be ace for integration style UATs or summat (and by that i mean, for people making hack apps)'
+  it 'raises exception when we try to get a path that it cannot match??'
 
 end

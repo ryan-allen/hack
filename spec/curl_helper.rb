@@ -1,7 +1,7 @@
 module CurlHelper
   
-  def curl(uri)
-    parse `curl -i #{uri.gsub('&', '\\\&')} 2>/dev/null`.chomp
+  def curl(uri, method = 'GET')
+    parse `curl -X #{method} -i #{uri.gsub('&', '\\\&')} 2>/dev/null`.chomp
   end
 
 private
