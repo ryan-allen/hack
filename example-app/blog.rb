@@ -64,7 +64,6 @@ Hack.run! :port => 5555 do
     html
   end
 
-  # right, so url parsing has to be done in a deterministic order
   get '/(.*)' do |permalink|
     if File.exist?(DATA_PATH)
       @posts = YAML.load_file(DATA_PATH)
