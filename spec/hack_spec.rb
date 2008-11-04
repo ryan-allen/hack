@@ -32,9 +32,12 @@ describe Hack do
       get('/inspect-env') { env.inspect }
       get('/err') { 'err, get' }
       post('/err') { 'err, post' } 
+      post('/post-data') { "posted: a was #{post['a']} and b was #{post['b']}" }
       # this catch all is here to test deterministic order of matching
       # if its' not deterministic it tends to catch a bunch of other
-      # random ones, so we put catch all's last :)
+      # random ones, so we put catch all's last :) p.s. it can be rewrote
+      # as .* w/ out the /, but then you'd capture the / (assuming you 
+      # actually captured it)
       get('/(.*)') { |junk| 'i am the catch-all and i caught ' + junk }
     end
   end
@@ -45,12 +48,12 @@ describe Hack do
   
   def get(uri)
     sleep 1 # for some reason, it takes a tiny bit to start listening on 5555? 
-    @status, @headers, @body = curl("http://localhost:5555#{uri}", 'GET') 
+    @status, @headers, @body = curl("http://localhost:5555#{uri}", :method => 'GET') 
   end
 
-  def post(uri)
+  def post(uri, data = nil) 
     sleep 1 # for some reason, it takes a tiny bit to start listening on 5555? 
-    @status, @headers, @body = curl("http://localhost:5555#{uri}", 'POST')
+    @status, @headers, @body = curl("http://localhost:5555#{uri}", :method => 'POST', :data => data)
   end
 
   it 'can map GET: /' do
@@ -136,10 +139,14 @@ describe Hack do
     @body.should == 'err, post'
   end
 
+  it 'can get out POST params' do
+    post '/post-data', 'a=1&b=2'
+    @body.should == 'posted: a was 1 and b was 2'
+  end
+
+  it 'can specify a uri w/ uri that will respond to get and post'
   it 'get? and post? respond correctly w/ get method' 
   it 'get? and post? respond correctly w/ post method' 
-  it 'can specify a uri w/ uri that will respond to get and post'
-  it 'can get out POST params'
 
   # complete up to here and we got enough for the blog
 

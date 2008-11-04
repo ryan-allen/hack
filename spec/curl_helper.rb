@@ -1,7 +1,8 @@
 module CurlHelper
   
-  def curl(uri, method = 'GET')
-    parse `curl -X #{method} -i #{uri.gsub('&', '\\\&')} 2>/dev/null`.chomp
+  def curl(uri, opts = {:method => 'GET'})
+    # this really should have it's own tests... but oh well :)
+    parse `curl -X #{opts[:method]} #{"-d #{opts[:data].gsub('&', '\\\&')}" if opts[:data]} -i #{uri.gsub('&', '\\\&')} 2>/dev/null`.chomp
   end
 
 private
