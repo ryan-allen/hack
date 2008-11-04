@@ -2,6 +2,14 @@
 # The Hack API, by Ryan Allen
 #
 
+# WARNING!!! WARNING!!! WARNING!!! THIS DOCUMENT IS NOTHING
+# MORE THAN A BRAINSTORMING SESSION! FOR ACTUAL API USAGE 
+# PLEASE REFER TO spec/hack_spec.rb AND example-app/blog.rb
+
+# (and on another note, when it's finished, which should
+# be soon, i'll update this all a-nicey for you'se wanting
+# to hack away at/with hack)
+
 # Basic GET using #uri:
 
 Hack.app do
