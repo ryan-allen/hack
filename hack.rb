@@ -80,9 +80,9 @@ private
         @request.send(request_method)
       end
 
-      #define_method request_method.downcase+"?" do
-      #  env['REQUEST_METHOD'] == request_method
-      #end
+      define_method request_method.downcase+"?" do
+        env['REQUEST_METHOD'] == request_method
+      end
 
     end
 
