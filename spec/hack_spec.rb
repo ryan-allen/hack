@@ -33,6 +33,7 @@ describe Hack do
       get('/err') { 'err, get' }
       post('/err') { 'err, post' } 
       post('/post-data') { "posted: a was #{post['a']} and b was #{post['b']}" }
+      uri('/i-used-uri') { 'hey there, i am multi purpose' }
       # this catch all is here to test deterministic order of matching
       # if its' not deterministic it tends to catch a bunch of other
       # random ones, so we put catch all's last :) p.s. it can be rewrote
@@ -144,7 +145,16 @@ describe Hack do
     @body.should == 'posted: a was 1 and b was 2'
   end
 
-  it 'can specify a uri w/ uri that will respond to get and post'
+  it 'uses uri to map to get' do
+    get '/i-used-uri'
+    @body.should == 'hey there, i am multi purpose'
+  end
+
+  it 'uses uri to map to post, also!' do
+    post '/i-used-uri'
+    @body.should == 'hey there, i am multi purpose'
+  end
+
   it 'get? and post? respond correctly w/ get method' 
   it 'get? and post? respond correctly w/ post method' 
 

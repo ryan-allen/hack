@@ -38,6 +38,13 @@ private
       @urls_to_proc['POST'][/^#{url}$/] = code
     end
 
+    def uri(url, &code)
+      @urls_in_order['GET'] << /^#{url}$/
+      @urls_to_proc['GET'][/^#{url}$/] = code
+      @urls_in_order['POST'] << /^#{url}$/
+      @urls_to_proc['POST'][/^#{url}$/] = code
+    end
+
   end
 
   class Cycle # as in, a request/response cycle
